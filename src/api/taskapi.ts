@@ -1,4 +1,4 @@
-const BASE_URL = "task-manager-iota-virid-33.vercel.app";
+const BASE_URL = "/api";
 
 export const loginApi = async (email: string, password: string) => {
   const res = await fetch(`${BASE_URL}/login`, {
