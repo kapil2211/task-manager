@@ -85,7 +85,7 @@ cd task-manager
 npm install
 npm run dev
 
-## 🔐 Test Credentials
+** 🔐 Test Credentials **
 
 Email: test@test.com
 Password: 123456
