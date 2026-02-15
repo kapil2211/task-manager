@@ -31,7 +31,7 @@ export const handlers = [
 
     const { username, password } = body;
 
-    if (username === "test" && password === "test123") {
+    if (username === "test@test.com" && password === "123456") {
       return HttpResponse.json(
         { token: "fake-jwt-token" },
         { status: 200 }
