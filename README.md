@@ -1,75 +1,135 @@
-# React + TypeScript + Vite
+# 📝 Task Manager App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern Task Manager built using **React 18, TypeScript, Redux Toolkit, and Mock Service Worker (MSW)**.
 
-Currently, two official plugins are available:
+This project demonstrates authentication flow, async CRUD operations, proper state management, API mocking, skeleton loading animations, and clean UI architecture.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Live Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- 🔐 Mock Authentication (JWT-based)
+- 📋 Full Task CRUD (Create, Read, Update, Delete)
+- 🔄 Async API simulation using MSW
+- 💾 Persistent task data across reloads
+- 🧠 Redux Toolkit for state management
+- 🎨 Modern glass-style UI using Tailwind CSS
+- ⏳ Skeleton loading animation
+- 📱 Responsive design
+- 🔒 Protected Dashboard route
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18
+- TypeScript
+- Redux Toolkit
+- Mock Service Worker (MSW)
+- Tailwind CSS
+- Vite
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🧪 Mocking Layer (How It Works)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This project uses **Mock Service Worker (MSW)** to simulate backend APIs.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Instead of calling a real server:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- MSW intercepts network requests
+- Returns mocked responses
+- Simulates real async behavior (including delay)
+
+### Mocked Endpoints
+
+- `POST /api/login` → Returns fake JWT
+- `GET /api/tasks` → Returns all tasks
+- `POST /api/tasks` → Create new task
+- `PUT /api/tasks/:id` → Update task
+- `DELETE /api/tasks/:id` → Delete task
+
+Tasks persist using `localStorage` inside the mock layer.
+
+This creates a realistic frontend-backend architecture without needing a real backend.
+
+---
+
+## 🏗 Architecture Flow
+
+UI (React Components)
+↓
+Redux Async Thunks
+↓
+API Layer (fetch calls)
+↓
+MSW Mock Backend
+↓
+Redux Store Update
+↓
+UI Re-render
+
+
+This mimics real-world production architecture.
+
+---
+
+## 💻 How To Run Locally
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone <your-repo-url>
+cd task-manager
+npm install
+npm run dev
+
+## 🔐 Test Credentials
+
+Email: test@test.com
+Password: 123456
+
+🎨 UI Features
+
+Glassmorphism design
+
+Capsule toggle buttons
+
+Priority badges
+
+Status indicators (Pending / Completed)
+
+Edit modal popup
+
+Skeleton loader animation
+
+Responsive layout (Mobile friendly)
+
+⚡ What This Project Demonstrates
+
+Proper async state management using Redux Toolkit
+
+Separation of concerns (API layer, state, UI)
+
+Mock backend architecture
+
+Handling loading and error states
+
+Protected routing with authentication
+
+Clean scalable folder structure
+
+🚀 Future Improvements
+
+Drag & drop task reordering
+
+Toast notification system
+
+Dark mode toggle
+
+Unit testing (React Testing Library)
+
+Integration with real backend
+
+Deployment (Vercel / Netlify)
