@@ -114,43 +114,53 @@ const taskSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder
+  builder
 
-      /* FETCH TASKS */
-      .addCase(fetchTasks.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tasks = action.payload;
-      })
-      .addCase(fetchTasks.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+    /* FETCH TASKS */
+    .addCase(fetchTasks.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchTasks.fulfilled, (state, action) => {
+      state.loading = false;
+      state.tasks = action.payload;
+    })
+    .addCase(fetchTasks.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
 
-      /* ADD TASK */
-      .addCase(addTask.fulfilled, (state, action) => {
-        state.tasks.push(action.payload);
-      })
+    /* ADD TASK */
+    .addCase(addTask.fulfilled, (state, action) => {
+      state.tasks.push(action.payload);
+    })
+    .addCase(addTask.rejected, (state, action) => {
+      state.error = action.payload as string;
+    })
 
-      /* EDIT TASK */
-      .addCase(editTask.fulfilled, (state, action) => {
-        const { id, updates } = action.payload;
-        const task = state.tasks.find((t) => t.id === id);
-        if (task) {
-          Object.assign(task, updates);
-        }
-      })
+    /* EDIT TASK */
+    .addCase(editTask.fulfilled, (state, action) => {
+      const { id, updates } = action.payload;
+      const task = state.tasks.find((t) => t.id === id);
+      if (task) {
+        Object.assign(task, updates);
+      }
+    })
+    .addCase(editTask.rejected, (state, action) => {
+      state.error = action.payload as string;
+    })
 
-      /* DELETE TASK */
-      .addCase(removeTask.fulfilled, (state, action) => {
-        state.tasks = state.tasks.filter(
-          (task) => task.id !== action.payload
-        );
-      });
-  },
+    /* REMOVE TASK */
+    .addCase(removeTask.fulfilled, (state, action) => {
+      state.tasks = state.tasks.filter(
+        (task) => task.id !== action.payload
+      );
+    })
+    .addCase(removeTask.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+}
+
 });
 
 export const { setFilter } = taskSlice.actions;
