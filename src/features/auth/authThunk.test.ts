@@ -69,4 +69,20 @@ describe("auth thunk", () => {
     expect(state.loading).toBe(false);
     expect(state.error).toBe("Login failed");
   });
+  it("should fallback to default error message when payload is undefined", async () => {
+  const store = configureStore({
+    reducer: { auth: authReducer },
+  });
+
+  // dispatch rejected manually without payload
+  store.dispatch({
+    type: login.rejected.type,
+    payload: undefined,
+  });
+
+  const state = store.getState().auth;
+
+  expect(state.error).toBe("Something went wrong");
+});
+
 });

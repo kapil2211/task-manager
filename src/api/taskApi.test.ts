@@ -123,5 +123,27 @@ describe("taskApi (fetch)", () => {
         await expect(deleteTaskApi("1")).rejects.toThrow();
     });
 
+    it("should throw error if fetch tasks fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(() =>
+    Promise.resolve({
+      ok: false,
+    } as Response)
+  ));
+
+  await expect(getTasksApi()).rejects.toThrow();
+});
+
+it("should throw error if create task fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(() =>
+    Promise.resolve({
+      ok: false,
+    } as Response)
+  ));
+
+  await expect(createTaskApi({ id: "1", title: "Test" }))
+    .rejects
+    .toThrow();
+});
+
 
 });

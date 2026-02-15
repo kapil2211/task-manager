@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1771153761279" clover="3.2.0">
-  <project timestamp="1771153761279" name="All files">
-    <metrics statements="82" coveredstatements="79" conditionals="24" coveredconditionals="17" methods="28" coveredmethods="27" elements="134" coveredelements="123" complexity="0" loc="82" ncloc="82" packages="3" files="3" classes="3"/>
+<coverage generated="1771154038963" clover="3.2.0">
+  <project timestamp="1771154038964" name="All files">
+    <metrics statements="82" coveredstatements="79" conditionals="24" coveredconditionals="18" methods="28" coveredmethods="27" elements="134" coveredelements="124" complexity="0" loc="82" ncloc="82" packages="3" files="3" classes="3"/>
     <package name="api">
       <metrics statements="21" coveredstatements="18" conditionals="10" coveredconditionals="8" methods="5" coveredmethods="4"/>
       <file name="taskapi.ts" path="D:\Meatac\task-manager\src\api\taskapi.ts">
@@ -12,12 +12,12 @@
         <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="12" count="0" type="stmt"/>
         <line num="15" count="3" type="stmt"/>
-        <line num="16" count="2" type="stmt"/>
-        <line num="17" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="18" count="1" type="stmt"/>
         <line num="28" count="3" type="stmt"/>
-        <line num="29" count="2" type="stmt"/>
-        <line num="34" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="35" count="1" type="stmt"/>
         <line num="38" count="3" type="stmt"/>
         <line num="39" count="2" type="stmt"/>
@@ -30,9 +30,9 @@
       </file>
     </package>
     <package name="features.auth">
-      <metrics statements="18" coveredstatements="18" conditionals="4" coveredconditionals="3" methods="6" coveredmethods="6"/>
+      <metrics statements="18" coveredstatements="18" conditionals="4" coveredconditionals="4" methods="6" coveredmethods="6"/>
       <file name="authSlice.ts" path="D:\Meatac\task-manager\src\features\auth\authSlice.ts">
-        <metrics statements="18" coveredstatements="18" conditionals="4" coveredconditionals="3" methods="6" coveredmethods="6"/>
+        <metrics statements="18" coveredstatements="18" conditionals="4" coveredconditionals="4" methods="6" coveredmethods="6"/>
         <line num="11" count="2" type="stmt"/>
         <line num="13" count="3" type="stmt"/>
         <line num="14" count="3" type="stmt"/>
@@ -48,8 +48,8 @@
         <line num="46" count="2" type="stmt"/>
         <line num="47" count="2" type="stmt"/>
         <line num="48" count="2" type="stmt"/>
-        <line num="51" count="3" type="stmt"/>
-        <line num="52" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="51" count="4" type="stmt"/>
+        <line num="52" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="57" count="2" type="stmt"/>
       </file>
     </package>
