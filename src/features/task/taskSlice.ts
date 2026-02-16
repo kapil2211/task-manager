@@ -14,6 +14,10 @@ export interface Task {
   priority: "low" | "medium" | "high";
   dueDate: string;
   createdAt: string;
+  // NEW
+  startedAt?: number | null;
+  totalTime?: number;
+
 }
 
 interface TaskState {
