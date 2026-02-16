@@ -20,11 +20,94 @@ const DashboardPage = () => {
   const [dueDate, setDueDate] = useState("");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  const [activeTimers, setActiveTimers] = useState<Record<string, number>>({});
+
+
   /* ================= FETCH TASKS ================= */
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
+  /* ================= TIMER ENGINE ================= */
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTimers((prev) => {
+        const updated: Record<string, number> = {};
+        for (const id in prev) {
+          updated[id] = prev[id] + 1;
+        }
+        return updated;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    return `${hrs.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleStart = (task: Task) => {
+    if (task.completed) return;
+
+    setActiveTimers((prev) => ({
+      ...prev,
+      [task.id]: task.totalTime || 0,
+    }));
+
+    dispatch(
+      editTask({
+        id: task.id,
+        updates: {
+          startedAt: Date.now(),
+        },
+      })
+    );
+  };
+
+  const handleCompleteToggle = (task: Task) => {
+    const wasRunning = activeTimers[task.id];
+
+    if (wasRunning !== undefined) {
+      dispatch(
+        editTask({
+          id: task.id,
+          updates: {
+            completed: !task.completed,
+            startedAt: null,
+            totalTime: wasRunning,
+          },
+        })
+      );
+
+      setActiveTimers((prev) => {
+        const updated = { ...prev };
+        delete updated[task.id];
+        return updated;
+      });
+    } else {
+      dispatch(
+        editTask({
+          id: task.id,
+          updates: {
+            completed: !task.completed,
+          },
+        })
+      );
+    }
+  };
+
+
+  /* ================= ADD TASK ================= */
+
 
   const handleAdd = () => {
     if (!title.trim()) return;
@@ -52,6 +135,11 @@ const DashboardPage = () => {
     if (filter === "completed") return task.completed;
     return true;
   });
+
+
+
+
+
 
 
 
@@ -204,7 +292,7 @@ const DashboardPage = () => {
       )}
 
       {/* LIST VIEW */}
-      
+
       {view === "list" && (
         <div>
 
@@ -279,6 +367,9 @@ const DashboardPage = () => {
                       ? "bg-yellow-200 text-yellow-700"
                       : "bg-rose-200 text-rose-700";
 
+                const runningTime =
+                  activeTimers[task.id] ?? task.totalTime ?? 0;
+
                 return (
                   <div
                     key={task.id}
@@ -300,6 +391,15 @@ const DashboardPage = () => {
                           {task.description}
                         </p>
                       )}
+                      <div className="text-sm text-blue-600 font-medium">
+                        ⏱ {formatTime(runningTime)}
+                      </div>
+
+                      {task.completed && task.totalTime !== undefined && (
+                    <div className="text-xs text-gray-500">
+                      Total Time: {formatTime(task.totalTime)}
+                    </div>
+                  )}
 
                       <div className="flex gap-3 flex-wrap items-center">
 
@@ -330,6 +430,15 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="flex flex-col gap-3">
+
+                      {!task.completed && activeTimers[task.id] === undefined && (
+                        <button
+                          onClick={() => handleStart(task)}
+                          className="text-blue-600 hover:underline"
+                        >
+                          Start
+                        </button>
+                      )}
                       <button
                         onClick={() =>
                           dispatch(
@@ -358,6 +467,8 @@ const DashboardPage = () => {
                         Delete
                       </button>
                     </div>
+
+
                   </div>
                 );
               })}
@@ -425,8 +536,18 @@ const DashboardPage = () => {
           </div>
         </div>
       )}
+
+
     </div>
   );
 };
 
 export default DashboardPage;
+
+
+<button
+  onClick={() => setEditingTask(task)}
+  className="text-blue-600 hover:underline"
+>
+  Edit
+</button>
