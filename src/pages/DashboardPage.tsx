@@ -21,7 +21,7 @@ const DashboardPage = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const [activeTimers, setActiveTimers] = useState<Record<string, number>>({});
-
+  const [pausedTasks, setPausedTasks] = useState<Set<string>>(new Set());
 
   /* ================= FETCH TASKS ================= */
 
@@ -34,16 +34,21 @@ const DashboardPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTimers((prev) => {
-        const updated: Record<string, number> = {};
-        for (const id in prev) {
-          updated[id] = prev[id] + 1;
+        const updated: Record<string, number> = { ...prev };
+
+        for (const id in updated) {
+          if (!pausedTasks.has(id)) {
+            updated[id] = updated[id] + 1;
+          }
         }
+
         return updated;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [pausedTasks]);
+
 
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
@@ -55,6 +60,7 @@ const DashboardPage = () => {
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
+
   const handleStart = (task: Task) => {
     if (task.completed) return;
 
@@ -63,27 +69,36 @@ const DashboardPage = () => {
       [task.id]: task.totalTime || 0,
     }));
 
+    setPausedTasks((prev) => {
+      const updated = new Set(prev);
+      updated.delete(task.id);
+      return updated;
+    });
+
     dispatch(
       editTask({
         id: task.id,
-        updates: {
-          startedAt: Date.now(),
-        },
+        updates: { startedAt: Date.now() },
       })
     );
   };
 
-  const handleCompleteToggle = (task: Task) => {
-    const wasRunning = activeTimers[task.id];
+  const handlePause = (task: Task) => {
+    setPausedTasks((prev) => new Set(prev).add(task.id));
+  };
 
-    if (wasRunning !== undefined) {
+
+  const handleCompleteToggle = (task: Task) => {
+    const currentTime = activeTimers[task.id];
+
+    if (currentTime !== undefined) {
       dispatch(
         editTask({
           id: task.id,
           updates: {
             completed: !task.completed,
             startedAt: null,
-            totalTime: wasRunning,
+            totalTime: currentTime,
           },
         })
       );
@@ -93,16 +108,30 @@ const DashboardPage = () => {
         delete updated[task.id];
         return updated;
       });
+
+      setPausedTasks((prev) => {
+        const updated = new Set(prev);
+        updated.delete(task.id);
+        return updated;
+      });
     } else {
       dispatch(
         editTask({
           id: task.id,
-          updates: {
-            completed: !task.completed,
-          },
+          updates: { completed: !task.completed },
         })
       );
     }
+  };
+
+
+
+  const handleResume = (task: Task) => {
+    setPausedTasks((prev) => {
+      const updated = new Set(prev);
+      updated.delete(task.id);
+      return updated;
+    });
   };
 
 
@@ -395,11 +424,11 @@ const DashboardPage = () => {
                         ⏱ {formatTime(runningTime)}
                       </div>
 
-                      {task.completed && task.totalTime !== undefined && (
-                    <div className="text-xs text-gray-500">
-                      Total Time: {formatTime(task.totalTime)}
-                    </div>
-                  )}
+                      {task.completed && (
+                        <div className="text-xs text-gray-500">
+                          Total Time: {formatTime(runningTime)}
+                        </div>
+                      )}
 
                       <div className="flex gap-3 flex-wrap items-center">
 
@@ -431,23 +460,42 @@ const DashboardPage = () => {
 
                     <div className="flex flex-col gap-3">
 
-                      {!task.completed && activeTimers[task.id] === undefined && (
-                        <button
-                          onClick={() => handleStart(task)}
-                          className="text-blue-600 hover:underline"
-                        >
-                          Start
-                        </button>
-                      )}
+                      {!task.completed &&
+                        activeTimers[task.id] === undefined && (
+                          <button
+                            onClick={() => handleStart(task)}
+                            className="text-blue-600 hover:underline"
+                          >
+                            Start
+                          </button>
+                        )}
+
+                      {/* Pause */}
+                      {!task.completed &&
+                        activeTimers[task.id] !== undefined &&
+                        !pausedTasks.has(task.id) && (
+                          <button
+                            onClick={() => handlePause(task)}
+                            className="text-yellow-600 hover:underline"
+                          >
+                            Pause
+                          </button>
+                        )}
+
+                      {/* Resume */}
+                      {!task.completed &&
+                        pausedTasks.has(task.id) && (
+                          <button
+                            onClick={() => handleResume(task)}
+                            className="text-emerald-600 hover:underline"
+                          >
+                            Resume
+                          </button>
+                        )}
+
+
                       <button
-                        onClick={() =>
-                          dispatch(
-                            editTask({
-                              id: task.id,
-                              updates: { completed: !task.completed },
-                            })
-                          )
-                        }
+                        onClick={() => handleCompleteToggle(task)}
                         className="text-emerald-600 hover:underline"
                       >
                         Toggle
@@ -545,9 +593,9 @@ const DashboardPage = () => {
 export default DashboardPage;
 
 
-<button
-  onClick={() => setEditingTask(task)}
-  className="text-blue-600 hover:underline"
->
-  Edit
-</button>
+// <button
+//   onClick={() => setEditingTask(task)}
+//   className="text-blue-600 hover:underline"
+// >
+//   Edit
+// </button>
